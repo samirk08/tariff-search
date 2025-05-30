@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tariff-search"
+version = "0.1.0"
+description = "Fast similarity search for US tariff descriptions (1789-2023)"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Samir Kadariya", email = "samirk08@mit.edu"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+
+[project.urls]
+Homepage = "https://github.com/samirk08/tariff-search"
+Documentation = "https://github.com/samirk08/tariff-search#readme"
+Repository = "https://github.com/samirk08/tariff-search"
+Issues = "https://github.com/samirk08/tariff-search/issues"
