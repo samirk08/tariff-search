@@ -15,7 +15,7 @@ setup(
     description="Fast similarity search for US tariff descriptions (1789-2023)",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/YOUR_USERNAME/tariff-search",  # TODO: Update this
+    url="https://github.com/samirk08/tariff-search",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
