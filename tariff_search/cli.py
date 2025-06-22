@@ -87,8 +87,7 @@ def main():
     search_parser.add_argument("query", help="Search query")
     search_parser.add_argument(
         "--data-dir", "-d",
-        default="tariff_search/data",
-        help="Directory containing prepared data"
+        help="Directory containing prepared data (defaults to ~/.tariff_search/data)"
     )
     search_parser.add_argument(
         "--top-k", "-k",

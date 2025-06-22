@@ -12,6 +12,7 @@ import os
 from typing import Optional, List, Tuple, Dict
 from rapidfuzz import fuzz
 import logging
+from .utils import get_default_data_dir
 
 logger = logging.getLogger(__name__)
 
@@ -43,9 +44,9 @@ class TariffSearch:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.auto_download = auto_download
         
-        # Set default data directory
+        # Set default data directory to persistent location
         if data_dir is None:
-            data_dir = os.path.join(os.path.dirname(__file__), 'data')
+            data_dir = get_default_data_dir()
         self.data_dir = Path(data_dir)
         
         # Check if data exists, download if needed
