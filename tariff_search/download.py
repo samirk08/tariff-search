@@ -160,12 +160,15 @@ def download_prepared_data(data_dir: str = None, force: bool = False) -> bool:
         logger.error("Failed to download data files.")
         return False
     
-    # Verify checksum
-    logger.info("Verifying download...")
-    if not verify_checksum(temp_zip, file_info["sha256"]):
-        logger.error("Checksum verification failed. The download may be corrupted.")
-        temp_zip.unlink()
-        return False
+    # Verify checksum (skip if checksum is TO_BE_CALCULATED)
+    if file_info["sha256"] != "TO_BE_CALCULATED":
+        logger.info("Verifying download...")
+        if not verify_checksum(temp_zip, file_info["sha256"]):
+            logger.error("Checksum verification failed. The download may be corrupted.")
+            temp_zip.unlink()
+            return False
+    else:
+        logger.warning("Skipping checksum verification (checksum not yet calculated)")
     
     # Extract files
     logger.info("Extracting data files...")

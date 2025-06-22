@@ -72,27 +72,62 @@ class TariffSearch:
         
     def _check_data_exists(self):
         """Check if required data files exist."""
-        required_files = ['embeddings.npy', 'metadata.pkl', 'info.pkl']
-        return all((self.data_dir / f).exists() for f in required_files)
+        # Check for multiple possible file structures
+        required_sets = [
+            # Expected structure from download
+            ['embeddings.npy', 'metadata.pkl', 'info.pkl'],
+            # Alternative structure with full names
+            ['all_tariffs_emb_vectors.npy', 'all_tariffs_emb_metadata.pkl'],
+            # Census structure
+            ['census_selected_df_vectors.npy', 'census_selected_df_metadata.pkl']
+        ]
+        
+        for required_files in required_sets:
+            if all((self.data_dir / f).exists() for f in required_files):
+                return True
+        return False
         
     def _load_data(self):
         """Load the metadata and embeddings."""
         logger.info("Loading data files...")
         
-        # Load metadata (without embeddings)
-        metadata_path = self.data_dir / 'metadata.pkl'
-        if not metadata_path.exists():
-            raise FileNotFoundError(f"Metadata file not found at {metadata_path}")
+        # Try different file naming conventions
+        metadata_paths = [
+            self.data_dir / 'metadata.pkl',
+            self.data_dir / 'all_tariffs_emb_metadata.pkl',
+            self.data_dir / 'census_selected_df_metadata.pkl'
+        ]
         
-        with open(metadata_path, 'rb') as f:
-            self.metadata = pickle.load(f)
+        embeddings_paths = [
+            self.data_dir / 'embeddings.npy',
+            self.data_dir / 'all_tariffs_emb_vectors.npy',
+            self.data_dir / 'census_selected_df_vectors.npy'
+        ]
         
-        # Load embeddings as numpy array
-        embeddings_path = self.data_dir / 'embeddings.npy'
-        if not embeddings_path.exists():
-            raise FileNotFoundError(f"Embeddings file not found at {embeddings_path}")
+        # Load metadata
+        metadata_loaded = False
+        for metadata_path in metadata_paths:
+            if metadata_path.exists():
+                logger.info(f"Loading metadata from {metadata_path}")
+                with open(metadata_path, 'rb') as f:
+                    self.metadata = pickle.load(f)
+                metadata_loaded = True
+                break
         
-        self.embeddings = np.load(embeddings_path)
+        if not metadata_loaded:
+            raise FileNotFoundError(f"No metadata file found in {self.data_dir}")
+        
+        # Load embeddings
+        embeddings_loaded = False
+        for embeddings_path in embeddings_paths:
+            if embeddings_path.exists():
+                logger.info(f"Loading embeddings from {embeddings_path}")
+                self.embeddings = np.load(embeddings_path)
+                embeddings_loaded = True
+                break
+        
+        if not embeddings_loaded:
+            raise FileNotFoundError(f"No embeddings file found in {self.data_dir}")
         
         # Initialize Faiss index if requested
         if self.use_faiss:
